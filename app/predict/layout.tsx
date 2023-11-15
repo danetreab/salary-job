@@ -1,7 +1,6 @@
 import React from 'react'
 import { title } from "@/components/primitives";
 
-
 const Layout = ({
     children,
 }: {
@@ -9,7 +8,7 @@ const Layout = ({
 }) => {
     return (
         <div>
-            <p className={title()}>About us</p>
+            <p className={title()}>Predict your job salary</p>
             {children}
         </div>
     )
