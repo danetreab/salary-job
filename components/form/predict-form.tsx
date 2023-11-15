@@ -7,7 +7,7 @@ import CustomModal from '@/components/modal';
 import { z } from 'zod';
 import { predictSchema } from '@/types/zodSchema';
 import { useForm } from 'react-hook-form';
-import { jobs, models, qualifications, work_type as work_types, roles, countries } from '@/components/form/predictData';
+import { jobs, models, qualifications, work_type as work_types, roles, countries, genders } from '@/components/form/predictData';
 
 
 const PredictForm = () => {
@@ -73,21 +73,21 @@ const PredictForm = () => {
                         </AutocompleteItem>
                     ))}
                 </Autocomplete>
-                {/* <Autocomplete
+                <Autocomplete
                     isRequired
-                    {...register('role', { required: true })}
-                    name='role'
-                    label="Role"
-                    placeholder="Select a role"
+                    {...register('gender', { required: true })}
+                    name='gender'
+                    label="Gender"
+                    placeholder="Select your gender"
                     labelPlacement="outside"
                     className="max-w-xs"
                 >
-                    {roles.map((role) => (
-                        <AutocompleteItem key={role.value} value={role.value}>
-                            {role.label}
+                    {genders.map((gender) => (
+                        <AutocompleteItem key={gender.value} value={gender.value}>
+                            {gender.label}
                         </AutocompleteItem>
                     ))}
-                </Autocomplete> */}
+                </Autocomplete>
                 <Autocomplete
                     isRequired
                     {...register('qualifications', { required: true })}

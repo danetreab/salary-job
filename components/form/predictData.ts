@@ -311,6 +311,10 @@ export const jobs = [
     { label: 'Market Analyst', value: 'Market Analyst' }
   ]
   
+export const genders = [
+  {value: "Male", label: "Male"},
+  {value: "Female", label: "Female"}
+]
 
 export const qualifications = [
   { value: "M.Tech", label: "M.Tech" },

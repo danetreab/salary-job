@@ -7,5 +7,6 @@ export const predictSchema = z.object({
     work_type: z.string(),
     experience: z.string(),
     role: z.string(),
-    country: z.string()
+    country: z.string(),
+    gender: z.string(),
 });
