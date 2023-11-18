@@ -8,11 +8,14 @@ import { z } from 'zod';
 import { predictSchema } from '@/types/zodSchema';
 import { useForm } from 'react-hook-form';
 import { jobs, models, qualifications, work_type as work_types, roles, countries, genders } from '@/components/form/predictData';
+import { axiosInstance } from '@/axiosInstance';
+import { convertResult } from '@/utils/covertResult';
 
 
 const PredictForm = () => {
 
     const [isModalOpen, setModalOpen] = useState(false);
+    const [modalData, setModalData] = useState<number>(0);
 
     const handleOpenModal = () => {
         setModalOpen(true);
@@ -28,14 +31,29 @@ const PredictForm = () => {
     })
 
 
-    async function onsubmit(data: z.infer<typeof predictSchema>) {
-        console.log(data)
-        await new Promise<void>((resolve) => {
-            setTimeout(() => {
-                resolve();
-            }, 2000); // 2 seconds in milliseconds
-        });
-        handleOpenModal()
+    async function onsubmit(value: z.infer<typeof predictSchema>) {
+        // console.log(data)
+        try {
+            const formData = new FormData();
+            formData.append('Model', value.model);
+            formData.append('Job Title', value.job);
+            formData.append('Preference', value.gender);
+            formData.append('Qualification', value.qualifications);
+            formData.append('Work Type', value.work_type);
+            formData.append('Country', value.country);
+            const res = await axiosInstance.post('/predict', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+            const data = res.data;
+            setModalData(data.result)
+            console.log(data.result)
+            handleOpenModal()
+        } catch (error) {
+            console.log(error)
+        }
+        // await new Promise<void>((resolve) => {
+        //     setTimeout(() => {
+        //         resolve();
+        //     }, 2000); // 2 seconds in milliseconds
+        // });
     }
 
 
@@ -165,11 +183,11 @@ const PredictForm = () => {
             </div>
             <CustomModal
                 buttonLabel="Open Modal"
-                title="Custom Modal Title"
+                title="Here are your results"
                 content={
                     <>
-                        <p>This is a custom modal content.</p>
-                        <p>You can add more paragraphs or customize as needed.</p>
+                        <p>This is the estimate salary</p>
+                        <p>{convertResult(modalData)}</p>
                     </>
                 }
                 // onCloseButtonLabel="Close Custom"
