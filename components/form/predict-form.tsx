@@ -49,10 +49,10 @@ const PredictForm = () => {
         } catch (error) {
             let message: string;
 
-            if (error instanceof Error) {
+            if (error && error instanceof Error) {
                 message = error.message;
             } else if (error && typeof error === 'object' && 'message' in error) {
-                message = error.message;
+                message = (error as { message: string }).message;
             } else if (typeof error === 'string') {
                 message = error;
             } else {
