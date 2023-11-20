@@ -15,7 +15,7 @@ import { convertResult } from '@/utils/covertResult';
 const PredictForm = () => {
 
     const [isModalOpen, setModalOpen] = useState(false);
-    const [modalData, setModalData] = useState<number>(0);
+    const [modalData, setModalData] = useState<{ title: string, content: string, caption: string }>({ title: '', caption: '', content: '' });
 
     const handleOpenModal = () => {
         setModalOpen(true);
@@ -43,17 +43,24 @@ const PredictForm = () => {
             formData.append('Country', value.country);
             const res = await axiosInstance.post('/predict', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             const data = res.data;
-            setModalData(data.result)
-            console.log(data.result)
+            setModalData((prev) => ({ ...prev, title: 'This is the estimate salary', caption: 'Here are your results', content: convertResult(data.result) }))
+            // console.log(data.result)
             handleOpenModal()
         } catch (error) {
-            console.log(error)
+            let message: string;
+
+            if (error instanceof Error) {
+                message = error.message;
+            } else if (error && typeof error === 'object' && 'message' in error) {
+                message = error.message;
+            } else if (typeof error === 'string') {
+                message = error;
+            } else {
+                message = 'An unknown error has occurred. Please try again later.';
+            }
+            setModalData((prev) => ({ ...prev, title: 'Somthing went wrong', caption: 'Opps!!', content: message }))
+            handleOpenModal();
         }
-        // await new Promise<void>((resolve) => {
-        //     setTimeout(() => {
-        //         resolve();
-        //     }, 2000); // 2 seconds in milliseconds
-        // });
     }
 
 
@@ -151,30 +158,6 @@ const PredictForm = () => {
                         </AutocompleteItem>
                     ))}
                 </Autocomplete>
-                {/* <Autocomplete
-                    isRequired
-                    {...register('experience', { required: true })}
-                    name='experience'
-                    label="Experience"
-                    placeholder="Select your work experience"
-                    labelPlacement="outside"
-                    className="max-w-xs"
-                >
-                    {models.map((model) => (
-                        <AutocompleteItem key={model.value} value={model.value}>
-                            {model.label}
-                        </AutocompleteItem>
-                    ))}
-                </Autocomplete> */}
-                {/* <Input
-                    {...register('experience', { required: true })}
-                    label="Experience"
-                    type='number'
-                    isRequired
-                    placeholder="Enter your work experience"
-                    labelPlacement="outside"
-                    className="max-w-xs"
-                /> */}
             </div>
             <div>
                 <Button type='submit' color="primary" variant="solid" isLoading={isSubmitting}>
@@ -183,11 +166,11 @@ const PredictForm = () => {
             </div>
             <CustomModal
                 buttonLabel="Open Modal"
-                title="Here are your results"
+                title={modalData.caption}
                 content={
                     <>
-                        <p>This is the estimate salary</p>
-                        <p>{convertResult(modalData)}</p>
+                        <p>{modalData.title}</p>
+                        <p>{modalData.content}</p>
                     </>
                 }
                 // onCloseButtonLabel="Close Custom"
