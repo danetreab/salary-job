@@ -25,7 +25,7 @@ const CardContent: React.FC<CardContentProps> = ({
                     <div className="relative col-span-6 md:col-span-4">
                         <Image
                             alt="Album cover"
-                            className="object-cover"
+                            className="object-contain"
                             shadow="md"
                             src={imageUrl}
                             width="100%"
